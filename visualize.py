@@ -68,18 +68,18 @@ def visualize_attention(model, img, patch_size, device):
 
     attentions = model.get_last_selfattention(img.to(device))
     nh = attentions.shape[1]  # number of head
-    print(f"    1)attentions.shape:{attentions.shape}, nh:{nh}")
+    print(f"    1)attentions.shape:{attentions.shape}, nh:{nh}")    # attentions.shape:torch.Size([1, 6, 9481, 9481]), nh:6
 
     # keep only the output patch attention
     attentions = attentions[0, :, 0, 1:].reshape(nh, -1)
-    print(f"    2)attentions.shape:{attentions.shape}")
+    print(f"    2)attentions.shape:{attentions.shape}")             # attentions.shape:torch.Size([6, 9480])
 
     attentions = attentions.reshape(nh, w_featmap, h_featmap)
-    print(f"    3)attentions.shape:{attentions.shape}")
+    print(f"    3)attentions.shape:{attentions.shape}")             # attentions.shape:torch.Size([6, 79, 120])
 
     attentions = nn.functional.interpolate(attentions.unsqueeze(
         0), scale_factor=patch_size, mode="nearest")[0].cpu().numpy()
-    print(f"    4)attentions.shape:{attentions.shape}")
+    print(f"    4)attentions.shape:{attentions.shape}")             attentions.shape:(6, 632, 960)
 
     return attentions
 
